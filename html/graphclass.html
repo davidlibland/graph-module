@@ -1,0 +1,688 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graph Class &#8212; Graph  documentation</title>
+    
+    <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Graph Algorithms" href="algorithms.html" />
+    <link rel="prev" title="Welcome to Graph’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">Graph  documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="index.html" title="Welcome to Graph’s documentation!"
+             accesskey="P">previous</a> |
+          <a href="algorithms.html" title="Graph Algorithms"
+             accesskey="N">next</a> |
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="graph-class">
+<h1>Graph Class<a class="headerlink" href="#graph-class" title="Permalink to this headline">¶</a></h1>
+<p class="rubric"><strong>Graph Class</strong></p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#graph.Graph" title="graph.Graph"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph</span></code></a>([edges,&nbsp;nodes])</td>
+<td>Creates a graph with the specified vertices and edges</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric"><strong>Graph Class Methods</strong></p>
+<p class="rubric">Construction Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#graph.Graph.add_edges" title="graph.Graph.add_edges"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.add_edges</span></code></a>(edges)</td>
+<td>Adds edges to the graph.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#graph.Graph.add_nodes" title="graph.Graph.add_nodes"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.add_nodes</span></code></a>(nodes)</td>
+<td>Adds nodes to the graph.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#graph.Graph.new_projection" title="graph.Graph.new_projection"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.new_projection</span></code></a>(edge_map,&nbsp;node_map)</td>
+<td>Construct a new <a class="reference internal" href="#graph.Graph" title="graph.Graph"><code class="xref py py-class docutils literal"><span class="pre">graph.Graph</span></code></a> whose nodes are the values returned by applying the function <code class="code docutils literal"><span class="pre">node_map(node)</span> <span class="pre">-&gt;</span> <span class="pre">new_node</span></code> to each node; and whose edges are the values returned by applying the function <code class="code docutils literal"><span class="pre">edge_map(src_node,dst_node,edge_obj)</span> <span class="pre">-&gt;</span> <span class="pre">new_edge_obj</span></code> to each edge triple.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#graph.Graph.new_subgraph" title="graph.Graph.new_subgraph"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.new_subgraph</span></code></a>([edge_pred,&nbsp;node_pred])</td>
+<td>Returns the maximal subgraph for which all nodes satisfy the node predicate and all edges satisfy the edge predicate.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Local Graph Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#graph.Graph.send_collect" title="graph.Graph.send_collect"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.send_collect</span></code></a>(emmiter,&nbsp;collector)</td>
+<td>Request each edge triple to emmit messages via the function <code class="code docutils literal"><span class="pre">emitter</span></code>  which will be delivered to its source and destination node where they will be  processed by the function <code class="code docutils literal"><span class="pre">collector</span></code>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#graph.Graph.update_edges" title="graph.Graph.update_edges"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.update_edges</span></code></a>(updater)</td>
+<td>Apply the function <code class="code docutils literal"><span class="pre">updater(src_node,dst_node,edge_obj)</span></code> to each edge triple, it should treat the source and destination objects, <code class="code docutils literal"><span class="pre">src_node</span></code> and <code class="code docutils literal"><span class="pre">dst_node</span></code>, as constant inputs.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#graph.Graph.update_nodes" title="graph.Graph.update_nodes"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.update_nodes</span></code></a>(updater)</td>
+<td>Apply the function <code class="code docutils literal"><span class="pre">updater(node)</span></code> to each node.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Query Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#graph.Graph.nodes" title="graph.Graph.nodes"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.nodes</span></code></a>()</td>
+<td>Returns a set-like object containing the nodes in the graph.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#graph.Graph.find" title="graph.Graph.find"><code class="xref py py-obj docutils literal"><span class="pre">graph.Graph.find</span></code></a>(motif)</td>
+<td>Returns all structure patterns found in the graph which match the given motif.</td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-graph"></span><div class="section" id="details">
+<h2>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="graph.Graph">
+<em class="property">class </em><code class="descclassname">graph.</code><code class="descname">Graph</code><span class="sig-paren">(</span><em>edges=None</em>, <em>nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a graph with the specified vertices and edges</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>edges</strong> (<em>iterable</em><em>, </em><em>optional</em>) &#8211; An iterable which yields triples of the form
+<code class="code docutils literal"><span class="pre">(src_node,dst_node,edge_obj)</span></code>
+signifying a directed edge whose source is <code class="code docutils literal"><span class="pre">src_node</span></code> and whose
+destination is <code class="code docutils literal"><span class="pre">dst_node</span></code>. The object <code class="code docutils literal"><span class="pre">edge_obj</span></code> will be
+attached to this edge (as a label).</li>
+<li><strong>nodes</strong> (<em>set-like</em><em>, </em><em>optional</em>) &#8211; A collection of (distinct) hashable objects.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span>
+          <span class="n">nodes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">})</span>
+</pre></div>
+</td></tr></table></div>
+<p>produces the graph <code class="code docutils literal"><span class="pre">g</span></code>:</p>
+<img alt="_images/graph1.png" src="_images/graph1.png" />
+</dd></dl>
+
+</div>
+<div class="section" id="construction-methods">
+<h2>Construction Methods<a class="headerlink" href="#construction-methods" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="graph.Graph.add_edges">
+<code class="descclassname">Graph.</code><code class="descname">add_edges</code><span class="sig-paren">(</span><em>edges</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.add_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds edges to the graph. Any new source and destination nodes are also added.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>edges</strong> (<em>iterable</em>) &#8211; An iterable which yields triples of the form
+<code class="code docutils literal"><span class="pre">(src_node,dst_node,edge_obj)</span></code>
+signifying a directed edge whose source is <code class="code docutils literal"><span class="pre">src_node</span></code> and whose
+destination is <code class="code docutils literal"><span class="pre">dst_node</span></code>. The object <code class="code docutils literal"><span class="pre">edge_obj</span></code> will be
+attached to this edge (as a label).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="graph.Graph.add_nodes">
+<code class="descclassname">Graph.</code><code class="descname">add_nodes</code><span class="sig-paren">(</span><em>nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.add_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds nodes to the graph.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nodes</strong> (<em>set-like</em>) &#8211; A collection of (distinct) hashable objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="graph.Graph.new_projection">
+<code class="descclassname">Graph.</code><code class="descname">new_projection</code><span class="sig-paren">(</span><em>edge_map</em>, <em>node_map</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.new_projection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new <a class="reference internal" href="#graph.Graph" title="graph.Graph"><code class="xref py py-class docutils literal"><span class="pre">graph.Graph</span></code></a> whose nodes are the values returned by
+applying the function <code class="code docutils literal"><span class="pre">node_map(node)</span> <span class="pre">-&gt;</span> <span class="pre">new_node</span></code> to each node;
+and whose edges are the values returned by applying the function
+<code class="code docutils literal"><span class="pre">edge_map(src_node,dst_node,edge_obj)</span> <span class="pre">-&gt;</span> <span class="pre">new_edge_obj</span></code> to each edge triple.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_map</strong> (<em>function</em>) &#8211; <p>This should be a function of the form <code class="code docutils literal"><span class="pre">map(src_node,dst_node,edge_obj)</span></code>
+which modifies <code class="code docutils literal"><span class="pre">edge_obj</span></code>, while treating <code class="code docutils literal"><span class="pre">src_node</span></code> and
+<code class="code docutils literal"><span class="pre">dst_node</span></code> as constant. Any return values will be ignored.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameters</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">node</span></code></td>
+<td>The input node</td>
+</tr>
+<tr class="row-odd"><td><strong>Return Values</strong></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">new_node</span></code></td>
+<td>The node created in the new graph</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><strong>edge_map</strong> (<em>function</em>) &#8211; <p>This should be a function of the form <code class="code docutils literal"><span class="pre">map(src_node,dst_node,edge_obj)</span></code>
+which modifies <code class="code docutils literal"><span class="pre">edge_obj</span></code>, while treating <code class="code docutils literal"><span class="pre">src_node</span></code> and
+<code class="code docutils literal"><span class="pre">dst_node</span></code> as constant. Any return values will be ignored.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameters</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">src_node</span></code></td>
+<td>The node at the source of the edge</td>
+</tr>
+<tr class="row-odd"><td><code class="code docutils literal"><span class="pre">dst_node</span></code></td>
+<td>The node at the destination of the edge</td>
+</tr>
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">edge_obj</span></code></td>
+<td>The object attached to the edge</td>
+</tr>
+<tr class="row-odd"><td><strong>Return Value</strong></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">new_edge_obj</span></code></td>
+<td>The object attached to the edge created
+in the new graph whose source node is
+<code class="code docutils literal"><span class="pre">node_map(src_node)</span></code> and whose
+destination is <code class="code docutils literal"><span class="pre">node_map(dst_node)</span></code></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new graph.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#graph.Graph" title="graph.Graph"><code class="xref py py-class docutils literal"><span class="pre">graph.Graph</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="graph.Graph.new_subgraph">
+<code class="descclassname">Graph.</code><code class="descname">new_subgraph</code><span class="sig-paren">(</span><em>edge_pred=None</em>, <em>node_pred=None</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.new_subgraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximal subgraph for which all nodes satisfy the node predicate
+and all edges satisfy the edge predicate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_pred</strong> (<em>function</em><em>, </em><em>optional</em>) &#8211; This should be a function of one argument which returns a <code class="code docutils literal"><span class="pre">bool</span></code>.
+If <code class="code docutils literal"><span class="pre">node_pred</span></code> is ommitted, then all nodes are included.</li>
+<li><strong>node_pred</strong> &#8211; This should be a function of one argument which returns a <code class="code docutils literal"><span class="pre">bool</span></code>.
+If <code class="code docutils literal"><span class="pre">edge_pred</span></code> is ommitted, all edges are included whose source and
+destination nodes satisfy the node predicate.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The maximal subgraph satisfying the given predicates.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#graph.Graph" title="graph.Graph"><code class="xref py py-class docutils literal"><span class="pre">graph.Graph</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="mi">3</span><span class="p">)],</span>
+          <span class="n">nodes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">})</span>
+<span class="n">edge_pred</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">,</span><span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">node_pred</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="n">node</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">})</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">edge_pred</span> <span class="o">=</span> <span class="n">edge_pred</span><span class="p">,</span><span class="n">node_pred</span> <span class="o">=</span> <span class="n">node_pred</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>produces the subgraph <code class="code docutils literal"><span class="pre">h</span></code>:</p>
+<img alt="_images/graph2.png" src="_images/graph2.png" />
+<p>of the graph <code class="code docutils literal"><span class="pre">g</span></code>:</p>
+<img alt="_images/graph1.png" src="_images/graph1.png" />
+</dd></dl>
+
+</div>
+<div class="section" id="local-graph-methods">
+<h2>Local Graph Methods<a class="headerlink" href="#local-graph-methods" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="graph.Graph.send_collect">
+<code class="descclassname">Graph.</code><code class="descname">send_collect</code><span class="sig-paren">(</span><em>emmiter</em>, <em>collector</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.send_collect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Request each edge triple to emmit messages via the function <code class="code docutils literal"><span class="pre">emitter</span></code></dt>
+<dd>which will be delivered to its source and destination node where they will be
+processed by the function <code class="code docutils literal"><span class="pre">collector</span></code>.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>emitter</strong> (<em>function</em>) &#8211; <p>This should be a function of the form:</p>
+<p><code class="code docutils literal"><span class="pre">emitter(src_node,dst_node,edge_obj)</span> <span class="pre">-&gt;</span> <span class="pre">src_msg_iter,dst_msg_iter</span></code></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="56%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameters</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">src_node</span></code></td>
+<td>the source node</td>
+</tr>
+<tr class="row-odd"><td><code class="code docutils literal"><span class="pre">dst_node</span></code></td>
+<td>the destination node</td>
+</tr>
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">edge_obj</span></code></td>
+<td>the object attached
+to the edge</td>
+</tr>
+<tr class="row-odd"><td><strong>Return Values</strong></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">src_msg_iter</span></code></td>
+<td>An iterator which
+yields messages
+delivered to the
+source node</td>
+</tr>
+<tr class="row-odd"><td><code class="code docutils literal"><span class="pre">src_msg_iter</span></code></td>
+<td>An iterator which
+yields messages
+delivered to the
+destination node</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><strong>collector</strong> (<em>function</em>) &#8211; <p>This should be a function of the form <code class="code docutils literal"><span class="pre">collector(node,msg_iter)</span></code>
+which processes the messages in <code class="code docutils literal"><span class="pre">msg_iter</span></code> and modifies <code class="code docutils literal"><span class="pre">node</span></code>
+acordingly. Any return values will be ignored.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="56%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameters</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">node</span></code></td>
+<td>The recipient node</td>
+</tr>
+<tr class="row-odd"><td><code class="code docutils literal"><span class="pre">msg_iter</span></code></td>
+<td>An iterator of
+messages addressed
+to the node</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="graph.Graph.update_edges">
+<code class="descclassname">Graph.</code><code class="descname">update_edges</code><span class="sig-paren">(</span><em>updater</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.update_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the function <code class="code docutils literal"><span class="pre">updater(src_node,dst_node,edge_obj)</span></code> to each edge
+triple, it should treat the source and destination objects, <code class="code docutils literal"><span class="pre">src_node</span></code> and
+<code class="code docutils literal"><span class="pre">dst_node</span></code>, as constant inputs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>updater</strong> (<em>function</em>) &#8211; <p>This should be a function of the form <code class="code docutils literal"><span class="pre">updater(src_node,dst_node,edge_obj)</span></code>
+which modifies <code class="code docutils literal"><span class="pre">edge_obj</span></code>, while treating <code class="code docutils literal"><span class="pre">src_node</span></code> and
+<code class="code docutils literal"><span class="pre">dst_node</span></code> as constant. Any return values will be ignored.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameters</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">src_node</span></code></td>
+<td>The node at the source of the edge</td>
+</tr>
+<tr class="row-odd"><td><code class="code docutils literal"><span class="pre">dst_node</span></code></td>
+<td>The node at the destination of the edge</td>
+</tr>
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">edge_obj</span></code></td>
+<td>The object attached to the edge</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="graph.Graph.update_nodes">
+<code class="descclassname">Graph.</code><code class="descname">update_nodes</code><span class="sig-paren">(</span><em>updater</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.update_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the function <code class="code docutils literal"><span class="pre">updater(node)</span></code> to each node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>updater</strong> (<em>function</em>) &#8211; <p>This should be a function of the form <code class="code docutils literal"><span class="pre">updater(node)</span></code>
+which modifies <code class="code docutils literal"><span class="pre">node</span></code>. Any return values will be ignored.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameters</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">node</span></code></td>
+<td>The node to be modified</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="query-methods">
+<h2>Query Methods<a class="headerlink" href="#query-methods" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="graph.Graph.nodes">
+<code class="descclassname">Graph.</code><code class="descname">nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set-like object containing the nodes in the graph. This can be chained
+after <code class="xref py py-class docutils literal"><span class="pre">graph.new_subgraph</span></code> to form more complex queries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A set-like object containing the nodes in the graph.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set-like</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="graph.Graph.find">
+<code class="descclassname">Graph.</code><code class="descname">find</code><span class="sig-paren">(</span><em>motif</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.Graph.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all structure patterns found in the graph which match the given motif.
+This can be chained after <code class="xref py py-class docutils literal"><span class="pre">graph.new_subgraph</span></code> to form more complex queries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>motif</strong> (<em>string</em>) &#8211; <p>A semi-colon separated string of structural patterns of the form
+<code class="samp docutils literal"><span class="pre">(</span><em><span class="pre">a</span></em><span class="pre">)-[</span><em><span class="pre">e</span></em><span class="pre">]-&gt;(</span><em><span class="pre">b</span></em><span class="pre">)</span></code>. This structural pattern represents an edge where
+<code class="samp docutils literal"><span class="pre">(</span><em><span class="pre">a</span></em><span class="pre">)</span></code> and <code class="samp docutils literal"><span class="pre">(</span><em><span class="pre">b</span></em><span class="pre">)</span></code> represent the source and destination nodes (these
+can optionally be left blank) and <code class="samp docutils literal"><span class="pre">[</span><em><span class="pre">e</span></em><span class="pre">]</span></code> represents the object labeling
+the edge (it can optionally be left blank).</p>
+<p>Each of <code class="samp docutils literal"><em><span class="pre">a</span></em></code>, <code class="samp docutils literal"><em><span class="pre">b</span></em></code>, and <code class="samp docutils literal"><em><span class="pre">e</span></em></code> are arbitrary substrings (they
+can optionally be left blank, and must not include the special characters
+<code class="code docutils literal"><span class="pre">()[]-&gt;</span></code>), if they are not blank, they will be used as column labels in
+the returned DataFrame.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>A DataFrame-like object whose columns are labelled by the distinct substrings</dt>
+<dd><code class="samp docutils literal"><span class="pre">(</span><em><span class="pre">a</span></em><span class="pre">)</span></code>, <code class="samp docutils literal"><span class="pre">(</span><em><span class="pre">b</span></em><span class="pre">)</span></code>, <code class="samp docutils literal"><span class="pre">[</span><em><span class="pre">e</span></em><span class="pre">]</span></code> found among the structural pattern
+parts of the motif (the parentheses <code class="docutils literal"><span class="pre">()</span></code> square brackets <code class="docutils literal"><span class="pre">[]</span></code> are included
+to distinguish columns representing edges and nodes).<p class="last">Each row corresponds to a valid assignment of the node labels <code class="samp docutils literal"><span class="pre">(</span><em><span class="pre">a</span></em><span class="pre">)</span></code> and
+<code class="samp docutils literal"><span class="pre">(</span><em><span class="pre">b</span></em><span class="pre">)</span></code> to nodes in the graph, and edge labels <code class="samp docutils literal"><span class="pre">[e]</span></code> to edges in
+the graph, which is consistent with <em>all</em> the structural patterns in the motif.
+For example the motif <code class="docutils literal"><span class="pre">(a)-[e1]-&gt;(b);</span> <span class="pre">(b)-[e2]-&gt;(c)</span></code> would find pairs of
+edges from <code class="docutils literal"><span class="pre">a</span></code> to <code class="docutils literal"><span class="pre">b</span></code> to <code class="docutils literal"><span class="pre">c</span></code>. Similarly, the motif
+<code class="docutils literal"><span class="pre">(a)-[e1]-&gt;(b);</span> <span class="pre">(b)-[e2]-&gt;(a)</span></code> would find pairs of nodes <code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">b</span></code>
+connected by edges in either direction.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">DataFrame-like</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>Given the graph <code class="code docutils literal"><span class="pre">g</span></code>:</p>
+<img alt="_images/graph1.png" src="_images/graph1.png" />
+<p>the query <code class="code docutils literal"><span class="pre">g.find(&quot;(a)-[e1]-&gt;(b);</span> <span class="pre">(b)-[e2]-&gt;(c)&quot;)</span></code> returns</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="17%" />
+<col width="17%" />
+<col width="20%" />
+<col width="17%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">(a)</th>
+<th class="head">(b)</th>
+<th class="head">[e1]</th>
+<th class="head">(c)</th>
+<th class="head">[e2]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>A</td>
+<td>B</td>
+<td>1</td>
+<td>C</td>
+<td>2</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>A</td>
+<td>C</td>
+<td>1</td>
+<td>D</td>
+<td>2</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>B</td>
+<td>C</td>
+<td>2</td>
+<td>D</td>
+<td>2</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>C</td>
+<td>D</td>
+<td>2</td>
+<td>A</td>
+<td>3</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>D</td>
+<td>A</td>
+<td>3</td>
+<td>B</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>D</td>
+<td>A</td>
+<td>3</td>
+<td>C</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Graph Class</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#details">Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#construction-methods">Construction Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-graph-methods">Local Graph Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#query-methods">Query Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Graph Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html#module-graph.algorithms">Convenience Classes for Algorithms</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+            </form>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="index.html" title="Welcome to Graph’s documentation!"
+              >previous</a> |
+            <a href="algorithms.html" title="Graph Algorithms"
+              >next</a> |
+            <a href="py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+              <br/>
+              <a href="_sources/graphclass.rst.txt"
+                rel="nofollow">Show Source</a>
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, David Li-Bland.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graph Algorithms &#8212; Graph  documentation</title>
+    
+    <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Graph Class" href="graphclass.html" /> 
+  </head>
+  <body role="document">
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">Graph  documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="graphclass.html" title="Graph Class"
+             accesskey="P">previous</a> |
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p class="rubric">Algorithms</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#graph.algorithms.page_rank" title="graph.algorithms.page_rank"><code class="xref py py-obj docutils literal"><span class="pre">graph.algorithms.page_rank</span></code></a>(g,&nbsp;reset_prob[,&nbsp;...])</td>
+<td>Computes the PageRank of each node in g and stores it in node[&#8216;page_rank&#8217;].</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#graph.algorithms.out_degree" title="graph.algorithms.out_degree"><code class="xref py py-obj docutils literal"><span class="pre">graph.algorithms.out_degree</span></code></a>(g)</td>
+<td>Computes the out degree of each node.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#graph.algorithms.connected_comp" title="graph.algorithms.connected_comp"><code class="xref py py-obj docutils literal"><span class="pre">graph.algorithms.connected_comp</span></code></a>(g)</td>
+<td>Computes the connected components of the graph.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Convenience Classes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel"><code class="xref py py-obj docutils literal"><span class="pre">graph.algorithms.GraphLabel</span></code></a>(name,&nbsp;\*\*attrs)</td>
+<td>A dict-like convenience wrapper object for graph nodes and edge labels.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="graph-algorithms">
+<h1>Graph Algorithms<a class="headerlink" href="#graph-algorithms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="note">
+<h2>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h2>
+<p>For each of the following algorithms, the node and edge objects must be able to store
+attributes in dict-like fashion. If necessary you can wrap the existing node and edge
+objects with <a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel"><code class="xref py py-class docutils literal"><span class="pre">graph.algorithms.GraphLabel</span></code></a> use the method</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">.</span><span class="n">new_projection</span><span class="p">(</span><span class="n">GraphLabel</span><span class="o">.</span><span class="n">edge_wrapper</span><span class="p">,</span><span class="n">GraphLabel</span><span class="o">.</span><span class="n">node_wrapper</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and then apply
+the algorithm to the returned graph. See <a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel"><code class="xref py py-class docutils literal"><span class="pre">graph.algorithms.GraphLabel</span></code></a> for more details.</p>
+</div>
+<div class="section" id="out-degree">
+<h2>Out Degree<a class="headerlink" href="#out-degree" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="graph.algorithms.out_degree">
+<code class="descclassname">graph.algorithms.</code><code class="descname">out_degree</code><span class="sig-paren">(</span><em>g</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.algorithms.out_degree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the out degree of each node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>g</strong> (<a class="reference internal" href="graphclass.html#graph.Graph" title="graph.Graph"><code class="xref py py-class docutils literal"><span class="pre">graph.Graph</span></code></a>) &#8211; Each node in the graph should be a <a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel"><code class="xref py py-class docutils literal"><span class="pre">graph.algorithms.GraphLabel</span></code></a>, or else
+behave like a dict.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">out_degree</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">emitter</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">,</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">],[]</span>
+    
+    <span class="k">def</span> <span class="nf">collector</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">msgs</span><span class="p">):</span>
+        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;out_degree&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">msgs</span><span class="p">))</span>
+    
+    <span class="n">g</span><span class="o">.</span><span class="n">send_collect</span><span class="p">(</span><span class="n">emitter</span><span class="p">,</span><span class="n">collector</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="pagerank">
+<h2>PageRank<a class="headerlink" href="#pagerank" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="graph.algorithms.page_rank">
+<code class="descclassname">graph.algorithms.</code><code class="descname">page_rank</code><span class="sig-paren">(</span><em>g</em>, <em>reset_prob</em>, <em>threshold=0.001</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.algorithms.page_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the PageRank of each node in g and stores it in node[&#8216;page_rank&#8217;].</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The node and edge objects must be able to store attributes in dict-like fashion.
+If necessary you can use the method g.new_projection(edge_map,node_map)
+where</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>g</strong> (<a class="reference internal" href="graphclass.html#graph.Graph" title="graph.Graph"><em>graph.Graph</em></a>) &#8211; The graph we use to compute the PageRank. Each node in the graph should be a
+<a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel"><code class="xref py py-class docutils literal"><span class="pre">graph.algorithms.GraphLabel</span></code></a>, or else behave like a dict.</li>
+<li><strong>reset_prob</strong> (<em>float</em>) &#8211; The probability (between 0 and 1) that one jumps to a random node (as opposed to
+following one of the outgoing edges).</li>
+<li><strong>threshold</strong> (<em>float</em><em>,</em><em>optional</em>) &#8211; The algorithm terminates when the PageRank of each node has converged up to this
+threshold. This must be a postive number.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">page_rank</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">reset_prob</span><span class="p">,</span><span class="n">threshold</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">reset_prob</span> <span class="o">&gt;=</span> <span class="mi">0</span>  <span class="ow">and</span> <span class="n">reset_prob</span> <span class="o">&lt;=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;We require 0 &lt;= reset_prob &lt;= 1&#39;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">threshold</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;We require 0 &lt; threshold&#39;</span><span class="p">)</span>
+        
+    <span class="c1">#Initialize the nodes and edges:</span>
+    <span class="n">out_degree</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="c1"># make sure each node knows it&#39;s out_degree</span>
+    
+    <span class="c1">#Each node starts the algorithm with a PageRank of 1.</span>
+    <span class="k">def</span> <span class="nf">init_node</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;page_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">update_nodes</span><span class="p">(</span><span class="n">init_node</span><span class="p">)</span>
+    
+    <span class="c1">#Each edge remember the proportion of the traffic if carries out of it&#39;s source:</span>
+    <span class="k">def</span> <span class="nf">init_edge</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">,</span><span class="n">e</span><span class="p">):</span>
+        <span class="n">e</span><span class="p">[</span><span class="s1">&#39;traffic_prop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">src</span><span class="p">[</span><span class="s1">&#39;out_degree&#39;</span><span class="p">]</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">update_edges</span><span class="p">(</span><span class="n">init_edge</span><span class="p">)</span>
+    
+    <span class="c1">#The emitter sends the relevant proportion of the </span>
+    <span class="c1">#source node&#39;s page_rank along each edge:</span>
+    <span class="k">def</span> <span class="nf">emitter</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">,</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[],[</span><span class="n">src</span><span class="p">[</span><span class="s1">&#39;page_rank&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;traffic_prop&#39;</span><span class="p">]]</span>
+        
+    
+
+    <span class="c1">#Dangling nodes (nodes with out_degree==0) cannot transmit it&#39;s current page_rank</span>
+    <span class="c1">#along any outgoing edges, so we need to collect their current page_ranks centrally</span>
+    <span class="c1">#and redistibute them equally amongst all nodes.</span>
+    <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+    
+    <span class="n">node_pred</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">node</span> <span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;out_degree&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span>
+    <span class="n">dangling_nodes</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">new_subgraph</span><span class="p">(</span><span class="n">node_pred</span><span class="o">=</span><span class="n">node_pred</span><span class="p">)</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">page_rank_collector</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">incoming_ranks</span><span class="p">,</span><span class="n">avg_dangle_rank</span><span class="p">):</span>
+        <span class="n">old_rank</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;page_rank&#39;</span><span class="p">]</span>
+        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;page_rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">reset_prob</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">incoming_ranks</span><span class="p">)</span><span class="o">+</span><span class="n">avg_dangle_rank</span><span class="p">)</span><span class="o">+</span><span class="n">reset_prob</span>  
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">old_rank</span> <span class="o">-</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;page_rank&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">False</span>
+    
+    <span class="k">while</span> <span class="nb">sum</span><span class="p">(</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">avg_dangle_rank</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;page_rank&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">dangling_nodes</span><span class="p">)</span><span class="o">/</span><span class="n">num_nodes</span>
+        <span class="n">collector</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">node</span><span class="p">,</span><span class="n">msgs</span><span class="p">:</span> <span class="n">page_rank_collector</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">msgs</span><span class="p">,</span><span class="n">avg_dangle_rank</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">send_collect</span><span class="p">(</span><span class="n">emitter</span><span class="p">,</span><span class="n">collector</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="connected-components">
+<h2>Connected Components<a class="headerlink" href="#connected-components" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="graph.algorithms.connected_comp">
+<code class="descclassname">graph.algorithms.</code><code class="descname">connected_comp</code><span class="sig-paren">(</span><em>g</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.algorithms.connected_comp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the connected components of the graph.</p>
+<p>Each node <code class="samp docutils literal"><em><span class="pre">node</span></em></code>, in the graph should be a <code class="xref py py-class docutils literal"><span class="pre">graph.GraphLabel</span></code>. Each
+connected component receives a distinct label, and the labels are stored in
+<code class="samp docutils literal"><em><span class="pre">node</span></em><span class="pre">['cc']</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>g</strong> (<a class="reference internal" href="graphclass.html#graph.Graph" title="graph.Graph"><code class="xref py py-class docutils literal"><span class="pre">graph.Graph</span></code></a>) &#8211; Each node in the graph should be a
+<a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel"><code class="xref py py-class docutils literal"><span class="pre">graph.algorithms.GraphLabel</span></code></a>, or else behave like a dict.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">connected_comp</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">init_node</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; id:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">update_nodes</span><span class="p">(</span><span class="n">init_node</span><span class="p">)</span> <span class="c1">#Initialize vertices </span>
+    
+    <span class="k">def</span> <span class="nf">emitter</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">,</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">dst</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]],[</span><span class="n">src</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">collector</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">msg_iter</span><span class="p">):</span>
+        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">for</span> <span class="n">near_cc</span> <span class="ow">in</span> <span class="n">msg_iter</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">near_cc</span> <span class="o">&lt;</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]:</span>
+                <span class="n">node</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">near_cc</span>
+                <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    
+    <span class="n">g</span><span class="o">.</span><span class="n">send_collect</span><span class="p">(</span><span class="n">emitter</span><span class="p">,</span><span class="n">collector</span><span class="p">)</span>
+    <span class="k">while</span> <span class="nb">sum</span><span class="p">(</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">send_collect</span><span class="p">(</span><span class="n">emitter</span><span class="p">,</span><span class="n">collector</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+<div class="section" id="module-graph.algorithms">
+<span id="convenience-classes-for-algorithms"></span><h1>Convenience Classes for Algorithms<a class="headerlink" href="#module-graph.algorithms" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="graph.algorithms.GraphLabel">
+<em class="property">class </em><code class="descclassname">graph.algorithms.</code><code class="descname">GraphLabel</code><span class="sig-paren">(</span><em>name</em>, <em>**attrs</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.algorithms.GraphLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dict-like convenience wrapper object for graph nodes and edge labels. Graph
+algorithms are able to store their results as attributes on the labels. Attributes can
+be accessed and set as with a dict.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Operations</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="code docutils literal"><span class="pre">n[key]</span> <span class="pre">=</span> <span class="pre">val</span></code></td>
+<td>set the value of <code class="code docutils literal"><span class="pre">n[key]</span></code> to <code class="code docutils literal"><span class="pre">val</span></code>.</td>
+</tr>
+<tr class="row-odd"><td><code class="code docutils literal"><span class="pre">n[key]</span></code></td>
+<td>Return the item of <code class="code docutils literal"><span class="pre">n</span></code> with key <code class="code docutils literal"><span class="pre">key</span></code>.</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The label name</li>
+<li><strong>attrs</strong> &#8211; Arbitrary attributes stored by the graph label.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="graph.algorithms.GraphLabel.edge_wrapper">
+<em class="property">static </em><code class="descname">edge_wrapper</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>edge_obj</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.algorithms.GraphLabel.edge_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap an edge in a GraphLabel. Useful as the edge_map for <code class="xref py py-class docutils literal"><span class="pre">Graph.new_projection</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>src</strong> &#8211; The source node of the edge (this is ignored).</li>
+<li><strong>dst</strong> &#8211; The destination node of the edge (this is ignored).</li>
+<li><strong>edge_obj</strong> &#8211; The edge_obj to be wrapped.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A GraphLabel object with <code class="code docutils literal"><span class="pre">name=str(edge_obj)</span></code> and <code class="docutils literal"><span class="pre">edge_obj</span></code> stored as
+the attribute <code class="docutils literal"><span class="pre">data</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel">GraphLabel</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="graph.algorithms.GraphLabel.name">
+<code class="descname">name</code><a class="headerlink" href="#graph.algorithms.GraphLabel.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the graph label</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="graph.algorithms.GraphLabel.node_wrapper">
+<em class="property">static </em><code class="descname">node_wrapper</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#graph.algorithms.GraphLabel.node_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap a node in a GraphLabel. Useful as the node_map for <code class="xref py py-class docutils literal"><span class="pre">Graph.new_projection</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> &#8211; The node to be wrapped.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A GraphLabel object with <code class="code docutils literal"><span class="pre">name=str(node)</span></code> and <code class="docutils literal"><span class="pre">node</span></code> stored as the
+attribute <code class="docutils literal"><span class="pre">data</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#graph.algorithms.GraphLabel" title="graph.algorithms.GraphLabel">GraphLabel</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="graphclass.html">Graph Class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Graph Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#note">Note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#out-degree">Out Degree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pagerank">PageRank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connected-components">Connected Components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#module-graph.algorithms">Convenience Classes for Algorithms</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+            </form>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="graphclass.html" title="Graph Class"
+              >previous</a> |
+            <a href="py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+              <br/>
+              <a href="_sources/algorithms.rst.txt"
+                rel="nofollow">Show Source</a>
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, David Li-Bland.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>
