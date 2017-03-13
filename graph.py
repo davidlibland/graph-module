@@ -327,9 +327,9 @@ class Graph():
             the edge (it can optionally be left blank).
             
             Each of :samp:`{a}`, :samp:`{b}`, and :samp:`{e}` are arbitrary substrings (they
-            can optionally be left blank, and must not include the special characters
-             ``()[]->``), if they are not blank, they will be used as column labels in the
-            returned DataFrame.
+            can optionally be left blank, and must not include the special characters 
+            :code:`()[]->`), if they are not blank, they will be used as column labels in 
+            the returned DataFrame.
             
         
         Returns
