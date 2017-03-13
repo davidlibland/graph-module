@@ -34,7 +34,7 @@ Out Degree
 .. literalinclude:: ../graph/algorithms/out_degree.py
    :language: python
    :linenos:
-   :lines: 1,11-17
+   :lines: 1,11-19
 
 PageRank
 --------
@@ -52,7 +52,7 @@ Connected Components
 .. literalinclude:: ../graph/algorithms/connected_comp.py
    :language: python
    :linenos:
-   :lines: 1,15-32
+   :lines: 1,15-35
 
 Convenience Classes for Algorithms
 ==================================

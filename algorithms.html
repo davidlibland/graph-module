@@ -113,17 +113,21 @@ behave like a dict.</td>
 </table>
 </dd></dl>
 
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">out_degree</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">out_degree</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="c1"># Each edge emits a non-empty message to the source node (and an empty message to the destination node)</span>
     <span class="k">def</span> <span class="nf">emitter</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">,</span><span class="n">e</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">],[]</span>
     
+    <span class="c1"># Each node collects all the messages it receives and counts them, the result is the number of outgoing edges.</span>
     <span class="k">def</span> <span class="nf">collector</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">msgs</span><span class="p">):</span>
         <span class="n">node</span><span class="p">[</span><span class="s1">&#39;out_degree&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">msgs</span><span class="p">))</span>
     
@@ -297,15 +301,21 @@ connected component receives a distinct label, and the labels are stored in
 16
 17
 18
-19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">connected_comp</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">connected_comp</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="c1"># We initialize each node by setting node[&#39;cc&#39;] to it&#39;s own id.</span>
     <span class="k">def</span> <span class="nf">init_node</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
         <span class="n">node</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; id:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
         <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
     <span class="n">g</span><span class="o">.</span><span class="n">update_nodes</span><span class="p">(</span><span class="n">init_node</span><span class="p">)</span> <span class="c1">#Initialize vertices </span>
     
+    <span class="c1"># Each edge sends messages to both nodes informing them of the value of each other&#39;s node[&#39;cc&#39;]</span>
     <span class="k">def</span> <span class="nf">emitter</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">,</span><span class="n">e</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">dst</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]],[</span><span class="n">src</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]]</span>
 
+    <span class="c1"># The node sets node[&#39;cc&#39;] to the smallest value received from it&#39;s neighbors.</span>
     <span class="k">def</span> <span class="nf">collector</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">msg_iter</span><span class="p">):</span>
         <span class="n">node</span><span class="p">[</span><span class="s1">&#39;halt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="k">for</span> <span class="n">near_cc</span> <span class="ow">in</span> <span class="n">msg_iter</span><span class="p">:</span>
