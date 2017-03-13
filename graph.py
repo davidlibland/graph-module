@@ -9,35 +9,41 @@ class Graph():
     Parameters
     ----------
     edges : iterable, optional
-        An interable which yields objects of type :class:`graph.Edge`.
+        An iterable which yields triples of the form
+        :code:`(src_node,dst_node,edge_obj)`
+        signifying a directed edge whose source is :code:`src_node` and whose 
+        destination is :code:`dst_node`. The object :code:`edge_obj` will be 
+        attached to this edge (as a label).
     nodes : set-like, optional
         A collection of (distinct) hashable objects.
+        
+    Example
+    --------
+    
+    .. code-block:: python
+        :linenos:
+        
+        g = Graph(edges = [('A','B',1),('A','C',1),
+                           ('B','C',1),('C','D',1),('D','A',1)],
+                  nodes = {'E'})
+        
+    produces the graph :code:`g`:
+    
+    .. image:: graph1.png
+    
     """
     def __init__(self,edges = None, nodes = None):
-        #self.nodes = pd.DataFrame(columns = ['nodes'])
-        #self.edges = pd.DataFrame(columns = ['src_node','dst_node','property'])
-        self.nodes = set()
+        self._nodes = set()
+        self._edges = pd.DataFrame(columns = ['src_node','dst_node','edge_obj'])
         if edges is not None:
             self.add_edges(edges)
         if nodes is not None:
             self.add_nodes(nodes)
     
     def from_df(self,edges):
-        self.edges = edges
-#         self.nodes = nodes.append(
-#                             edges[['src_node']].rename(columns = {'src_node':'nodes'})).append(
-#                             edges[['dst_node']].rename(columns = {'dst_node':'nodes'})).drop_duplicates()
-        self.nodes = {node for node in edges.src_node}|{node for node in edges.dst_node}
+        self._edges = edges
+        self._nodes = {node for node in edges.src_node}|{node for node in edges.dst_node}
         return self
-    
-    def __getitem__(self, key):
-        """Returns the adjacency list for the specified vertex
-        
-        Parameters
-        ----------
-        key : pair of indices
-        """
-        return True
         
     def add_nodes(self,nodes):
         """Adds nodes to the graph.
@@ -47,9 +53,7 @@ class Graph():
         nodes : set-like
             A collection of (distinct) hashable objects.
         """
-        #new_nodes = pd.DataFrame({'nodes':list(nodes)})
-        #self.nodes = self.nodes.append(new_nodes).drop_duplicates()
-        self.nodes.update(nodes)
+        self._nodes.update(nodes)
         
     def add_edges(self,edges):
         """Adds edges to the graph. Any new source and destination nodes are also added.
@@ -57,14 +61,20 @@ class Graph():
         Parameters
         ----------
         edges : iterable
-            An iterable which yields objects of type :class:`graph.Edge`.
+            An iterable which yields triples of the form
+            :code:`(src_node,dst_node,edge_obj)`
+            signifying a directed edge whose source is :code:`src_node` and whose 
+            destination is :code:`dst_node`. The object :code:`edge_obj` will be 
+            attached to this edge (as a label).
+            
         """
-        #new_edges = pd.DataFrame(columns = ['src_node','dst_node','property'], data = [[e.src,e.dst,e.properties] for e in edges])
-        new_edges = pd.DataFrame(columns = ['src_node','dst_node','edge_obj'], data = [[src,dst,e.edge_obj] for src,dst,edge_obj in edges])
-        self.edges = self.edges.append(new_edges)
-        self.add_nodes([e.src for e in edges]+[e.dst for e in edges])
+        new_edges = pd.DataFrame(columns = ['src_node','dst_node','edge_obj'],
+                                 data = [[src,dst,edge_obj] for src,dst,edge_obj in edges])
+        self._edges = self._edges.append(new_edges)
+        self.add_nodes({node for node in new_edges.src_node}|
+                       {node for node in new_edges.dst_node})
     
-    def subgraph(self, edge_pred = None,node_pred = None):
+    def new_subgraph(self, edge_pred = None,node_pred = None):
         """Returns the maximal subgraph for which all nodes satisfy the node predicate
         and all edges satisfy the edge predicate.
         
@@ -72,31 +82,57 @@ class Graph():
         ----------
         node_pred : function, optional
             This should be a function of one argument which returns a :code:`bool`.
-            The default value of :code:`None` means all nodes are included
+            If :code:`node_pred` is ommitted, then all nodes are included.
             
         node_pred : function, optional
             This should be a function of one argument which returns a :code:`bool`.
-            The default value of :code:`None` means all edges are included whose source and 
+            If :code:`edge_pred` is ommitted, all edges are included whose source and 
             destination nodes satisfy the node predicate.
         
+        Returns
+        -------
+        :class:`graph.Graph`
+            The maximal subgraph satisfying the given predicates.
+        
+        Example
+        -------
+        .. code-block:: python
+            :linenos:
+        
+            g = Graph(edges = [('A','B',1),('A','C',1),
+                               ('B','C',2),('C','D',2),('D','A',3)],
+                      nodes = {'E'})
+            edge_pred = (lambda src,dst,e: e==2)
+            node_pred = (lambda node: node in {'A','B','C'})
+            h = g.subgraph(edge_pred = edge_pred,node_pred = node_pred)
+            
+        produces the subgraph :code:`h`:
+        
+        .. image:: graph2.png
+        
+        of the graph :code:`g`:
+    
+        .. image:: graph1.png
         """
         if node_pred == None:
             node_pred = lambda x: True
         if edge_pred == None:
-            edge_pred = lambda x: True
+            edge_pred = lambda x,y,z: True
             
-        edge_mask = (self.edges.apply(lambda x: (edge_pred(x.src_node,x.dst_node,x.edge_obj)),axis = 1)) \
-                      & (self.edges.src_node.apply(node_pred)) \
-                      & (self.edges.dst_node.apply(node_pred))
+        edge_mask = (self._edges.apply(lambda x: (edge_pred(x.src_node,x.dst_node,x.edge_obj)),
+                                       axis = 1)) \
+                    & (self._edges.src_node.apply(node_pred)) \
+                    & (self._edges.dst_node.apply(node_pred))
                       
-        edges = self.edges[edge_mask]
+        edges = self._edges[edge_mask]
         new_graph = Graph().from_df(edges)
-        new_graph.add_nodes({node for node in self.nodes if node_pred(node)})
+        new_graph.add_nodes({node for node in self._nodes if node_pred(node)})
         return new_graph
-        #return Graph().from_df(edges,self.nodes[self.nodes['nodes'].apply(node_pred)])
                     
     def send_collect(self, emmiter, collector):
-        """Request each edge triple to emmit messages which will be delivered to its source and destination node.
+        """Request each edge triple to emmit messages via the function :code:`emitter`
+         which will be delivered to its source and destination node where they will be
+         processed by the function :code:`collector`.
         
         Parameters
         ----------
@@ -115,25 +151,23 @@ class Graph():
             |:code:`edge_obj`         |the object attached |
             |                         |to the edge         |
             +-------------------------+--------------------+
-            
-            +--------------------+--------------------+
-            |Return Values       |Description         |
-            +====================+====================+
-            |:code:`src_msg_iter`|An iterator which   |
-            |                    |yields messages     |
-            |                    |delivered to the    |
-            |                    |source node         |
-            +--------------------+--------------------+
-            |:code:`src_msg_iter`|An iterator which   |
-            |                    |yields messages     |
-            |                    |delivered to the    |
-            |                    |destination node    |
-            +--------------------+--------------------+
+            |**Return Values**        |                    |
+            +-------------------------+--------------------+
+            |:code:`src_msg_iter`     |An iterator which   |
+            |                         |yields messages     |
+            |                         |delivered to the    |
+            |                         |source node         |
+            +-------------------------+--------------------+
+            |:code:`src_msg_iter`     |An iterator which   |
+            |                         |yields messages     |
+            |                         |delivered to the    |
+            |                         |destination node    |
+            +-------------------------+--------------------+
             
         collector : function
-            This should be a function of the form:
-            
-            :code:`collector(node,msg_iter)`
+            This should be a function of the form :code:`collector(node,msg_iter)`
+            which processes the messages in :code:`msg_iter` and modifies :code:`node`
+            acordingly. Any return values will be ignored.
             
             +-------------------------+--------------------+
             |Parameters               |Description         |
@@ -145,88 +179,252 @@ class Graph():
             |                         |to the node         |
             +-------------------------+--------------------+
             
-            +--------------------+
-            |Return Values       |
-            +====================+
-            |:code:`None`        |
-            +--------------------+
-            
-            
         
         """
-        #outputs = itertools.chain.from_iterable( emmiter(e) for e in Edge.from_df(self.edges))
-        #outputs = itertools.chain.from_iterable( emmiter(e) for e in Edge.from_df(self.edges))
         
         # Attach addresses to the messages:
         addressed_msgs = itertools.chain.from_iterable(zip((e.src_node,e.dst_node),
                     emmiter(e.src_node,e.dst_node,e.edge_obj))
-                    for e in self.edges.itertuples())
-        #agg_msgs = dict()
-        #for node,msg in outputs:
-        #    agg_msgs[node] = msg if node not in agg_msgs else agg_msgs[node]+msg
+                    for e in self._edges.itertuples())
         
-        #Aggregate the messages to each node
+        # Aggregate the messages to each node
         agg_msgs = dict()
         for node,msg_iter in addressed_msgs:
            agg_msgs[node] = msg_iter if node not in agg_msgs \
                             else itertools.chain(agg_msgs[node],msg_iter)
-        for node in self.nodes:
+        
+        # Collect the messages
+        for node in self._nodes:
             collector(node,agg_msgs.get(node,[]))
     
-    def map_nodes(self,map):
-        for node in self.nodes:
-            map(node)
+    def update_nodes(self,updater):
+        """Apply the function :code:`updater(node)` to each node.
+        
+        Parameters
+        ----------
+        updater : function
+            This should be a function of the form :code:`updater(node)`
+            which modifies :code:`node`. Any return values will be ignored.
+            
+            +-------------------------+------------------------+
+            |Parameters               |Description             |
+            +=========================+========================+
+            |:code:`node`             |The node to be modified |
+            +-------------------------+------------------------+
+        """
+        for node in self._nodes:
+            updater(node)
     
-    def map_edges(self,map):
-        for e in self.edges.itertuples():
-            map(e.src_node,e.dst_node,e.edge_obj)
+    def update_edges(self,updater):
+        """Apply the function :code:`updater(src_node,dst_node,edge_obj)` to each edge
+        triple, it should treat the source and destination objects, :code:`src_node` and 
+        :code:`dst_node`, as constant inputs.
+        
+        Parameters
+        ----------
+        updater : function
+            This should be a function of the form :code:`updater(src_node,dst_node,edge_obj)`
+            which modifies :code:`edge_obj`, while treating :code:`src_node` and 
+            :code:`dst_node` as constant. Any return values will be ignored.
+            
+            +-------------------------+-----------------------------------------+
+            |Parameters               |Description                              |
+            +=========================+=========================================+
+            |:code:`src_node`         |The node at the source of the edge       |
+            +-------------------------+-----------------------------------------+
+            |:code:`dst_node`         |The node at the destination of the edge  |
+            +-------------------------+-----------------------------------------+
+            |:code:`edge_obj`         |The object attached to the edge          |
+            +-------------------------+-----------------------------------------+
+        """
+        for e in self._edges.itertuples():
+            updater(e.src_node,e.dst_node,e.edge_obj)
     
-    def project_a_copy(self,edge_map,node_map):
-        processed_node_objs = {}
-        for node in self.nodes:
-            processed_node_objs[node]=node_map(node)
-        new_edges = pd.DataFrame({'src_node':self.edges.src_node.apply(lambda x: processed_node_objs[x]),
-                                  'dst_node':self.edges.dst_node.apply(lambda x: processed_node_objs[x]),
-                                  'edge_obj':self.edges.edge_obj.apply(edge_map)}) 
+    def new_projection(self,edge_map,node_map):
+        """Construct a new :class:`graph.Graph` whose nodes are the values returned by 
+        applying the function :code:`node_map(node) -> new_node` to each node; 
+        and whose edges are the values returned by applying the function
+        :code:`edge_map(src_node,dst_node,edge_obj) -> new_edge_obj` to each edge triple.
+        
+        Parameters
+        ----------
+        node_map : function
+            This should be a function of the form :code:`map(src_node,dst_node,edge_obj)`
+            which modifies :code:`edge_obj`, while treating :code:`src_node` and 
+            :code:`dst_node` as constant. Any return values will be ignored.
+            
+            +-------------------------+-----------------------------------------+
+            |Parameters               |Description                              |
+            +=========================+=========================================+
+            |:code:`node`             |The input node                           |
+            +-------------------------+-----------------------------------------+
+            |**Return Values**        |                                         |
+            +-------------------------+-----------------------------------------+
+            |:code:`new_node`         |The node created in the new graph        |
+            +-------------------------+-----------------------------------------+
+            
+        edge_map : function
+            This should be a function of the form :code:`map(src_node,dst_node,edge_obj)`
+            which modifies :code:`edge_obj`, while treating :code:`src_node` and 
+            :code:`dst_node` as constant. Any return values will be ignored.
+            
+            +-------------------------+-----------------------------------------+
+            |Parameters               |Description                              |
+            +=========================+=========================================+
+            |:code:`src_node`         |The node at the source of the edge       |
+            +-------------------------+-----------------------------------------+
+            |:code:`dst_node`         |The node at the destination of the edge  |
+            +-------------------------+-----------------------------------------+
+            |:code:`edge_obj`         |The object attached to the edge          |
+            +-------------------------+-----------------------------------------+
+            |**Return Value**         |                                         |
+            +-------------------------+-----------------------------------------+
+            |:code:`new_edge_obj`     |The object attached to the edge created  |
+            |                         |in the new graph whose source node is    | 
+            |                         |:code:`node_map(src_node)` and whose     |
+            |                         |destination is :code:`node_map(dst_node)`|
+            +-------------------------+-----------------------------------------+
+        
+        Returns
+        -------
+        :class:`graph.Graph`
+            The new graph.
+        """
+        processed_nodes = {}
+        edge_map_variant = lambda x:edge_map(x.src_node,x.dst_node,x.edge_obj)
+        for node in self._nodes:
+            processed_nodes[node]=node_map(node)
+        new_edges = pd.DataFrame({'src_node':self._edges.src_node.apply(processed_nodes.get),
+                                  'dst_node':self._edges.dst_node.apply(processed_nodes.get),
+                                  'edge_obj':self._edges.apply(edge_map_variant,axis=1)}) 
         new_graph = Graph().from_df(new_edges)
-        new_graph.add_nodes(processed_node_objs.values())
+        new_graph.add_nodes(processed_nodes.values())
         return new_graph
                 
-    def __repr__(self):
-        return repr(self.nodes)+'\n'+repr(self.edges)
-    
-    def save(self,filename):
-        with open(filename,'wb') as file:
-            pickle.dump({'nodes':self.nodes,'edges':self.edges},file)
+    def nodes(self):
+        """Returns a set-like object containing the nodes in the graph. This can be chained
+        after :class:`graph.new_subgraph` to form more complex queries.
+        
+        Returns
+        -------
+        set-like
+            A set-like object containing the nodes in the graph.
+        """
+        
+        return self._nodes.copy()
     
     def find(self,motif):
+        """Returns all structure patterns found in the graph which match the given motif.
+        This can be chained after :class:`graph.new_subgraph` to form more complex queries.
+        
+        Parameters
+        ----------
+        motif : string
+            A semi-colon separated string of structural patterns of the form 
+            :samp:`({a})-[{e}]->({b})`. This structural pattern represents an edge where 
+            :samp:`({a})` and :samp:`({b})` represent the source and destination nodes (these 
+            can optionally be left blank) and :samp:`[{e}]` represents the object labeling 
+            the edge (it can optionally be left blank).
+            
+            Each of :samp:`{a}`, :samp:`{b}`, and :samp:`{e}` are arbitrary substrings (they
+            can optionally be left blank, and must not include the special characters
+             ``()[]->``), if they are not blank, they will be used as column labels in the
+            returned DataFrame.
+            
+        
+        Returns
+        -------
+        DataFrame-like
+            A DataFrame-like object whose columns are labelled by the distinct substrings
+             :samp:`({a})`, :samp:`({b})`, :samp:`[{e}]` found among the structural pattern
+             parts of the motif (the parentheses ``()`` square brackets ``[]`` are included
+             to distinguish columns representing edges and nodes).
+             
+             Each row corresponds to a valid assignment of the node labels :samp:`({a})` and
+             :samp:`({b})` to nodes in the graph, and edge labels :samp:`[e]` to edges in 
+             the graph, which is consistent with *all* the structural patterns in the motif.
+             For example the motif ``(a)-[e1]->(b); (b)-[e2]->(c)`` would find pairs of
+             edges from ``a`` to ``b`` to ``c``. Similarly, the motif 
+             ``(a)-[e1]->(b); (b)-[e2]->(a)`` would find pairs of nodes ``a`` and ``b`` 
+             connected by edges in either direction.
+             
+        Example
+        -------
+        Given the graph :code:`g`:
+        
+        .. image:: graph1.png
+        
+        the query :code:`g.find("(a)-[e1]->(b); (b)-[e2]->(c)")` returns
+        
+        +----+-------+-------+--------+-------+--------+
+        |    | \(a\) | \(b\) |  [e1]  | \(c\) |  [e2]  |
+        +====+=======+=======+========+=======+========+
+        |  0 | A     | B     |      1 | C     |      2 |
+        +----+-------+-------+--------+-------+--------+
+        |  1 | A     | C     |      1 | D     |      2 |
+        +----+-------+-------+--------+-------+--------+
+        |  2 | B     | C     |      2 | D     |      2 |
+        +----+-------+-------+--------+-------+--------+
+        |  3 | C     | D     |      2 | A     |      3 |
+        +----+-------+-------+--------+-------+--------+
+        |  4 | D     | A     |      3 | B     |      1 |
+        +----+-------+-------+--------+-------+--------+
+        |  5 | D     | A     |      3 | C     |      1 |
+        +----+-------+-------+--------+-------+--------+
+        
+        """ 
         patterns = [p.strip() for p in motif.split(';')]
         def parse_pattern(p):
             a = re.search('\(.*\)-',p)
-            src = '' if not a else a.group(0)[1:-2].strip()
+            src = '' if not a else a.group(0)[:-1].strip()
             e = re.search('-\[.*\]->',p)
-            e = '' if not e else e.group(0)[2:-3].strip()
+            e = '' if not e else e.group(0)[1:-2].strip()
             b = re.search('->\(.*\)',p)
-            dst = '' if not b else b.group(0)[3:-1].strip()
+            dst = '' if not b else b.group(0)[2:].strip()
             return src,dst,e
         
         df_out = pd.DataFrame()
         for p in patterns:
             src,dst,e = parse_pattern(p)
-            mask = self.edges
+            mask = self._edges
             data = dict()
             if src != '':
-                data[src] = self.edges.src_node
+                data[src] = self._edges.src_node
             if dst != '':
-                data[dst] = self.edges.dst_node
+                data[dst] = self._edges.dst_node
             if e != '':
-                data[e] = self.edges.edge_obj
+                data[e] = self._edges.edge_obj
             df_tmp = pd.DataFrame(data)
             if df_out.size == 0:
                 df_out = df_tmp
             else:
                 df_out = df_out.merge(df_tmp,how='inner')
         return df_out
+        
+    def __repr__(self):
+        return repr(self._nodes)+'\n'+repr(self._edges)
+    
+    def write_dot(self,filename,edge_repr=None,node_repr=None):
+        with open(filename,'w') as file:
+            file.write('digraph {\n')
+            written_nodes = set()
+            for e in self._edges.itertuples():
+                src_txt = repr(e.src_node) if not node_repr else node_repr(e.src_node)
+                dst_txt = repr(e.dst_node) if not node_repr else node_repr(e.dst_node)
+                e_txt = repr(e.edge_obj) if not edge_repr else edge_repr(e.edge_obj)
+                file.write('\t'+src_txt+' -> '+dst_txt+' [label="'+e_txt+'"];\n')
+                written_nodes.add(e.src_node)
+                written_nodes.add(e.dst_node)
+            for node in (self._nodes - written_nodes):
+                node_txt = repr(node) if not node_repr else node_repr(node)
+                file.write('\t'+node_txt+';\n')
+                
+            
+            file.write('}')
+        
+    def save(self,filename):
+        with open(filename,'wb') as file:
+            pickle.dump({'nodes':self._nodes,'edges':self._edges},file)
     
     @staticmethod
     def load(filename):
@@ -235,102 +433,6 @@ class Graph():
             new_graph = Graph().from_df(data['edges'])
             new_graph.add_nodes(data['nodes'])
         return new_graph
-        
-class GraphObj():
-    def __init__(self,name,**attrs):
-        self.name = name
-        self.attrs = attrs
-    
-    def __repr__(self):
-        return repr(self.name)+ " : "+repr(self.attrs)
-    
-    def __getitem__(self,key):
-        return self.attrs[key]
-    
-    def __setitem__(self,key,value):
-        self.attrs[key] = value
 
-# class GraphObj(dict):
-#     def __init__(self,name,**attrs):
-#         self.name = name
-#         super().__init__(attrs)
-#         
-#     def __repr__(self):
-#         return repr(self.name)+" : "+super().__repr__()
 
-# class Vertex():
-#     """A vertex"""
-#     def __init__(self,id,**attrs):
-#         """Create a vertex with the specified id and attributes."""
-#         self.attrs = attrs
-#         
-#     def in_degee(self):
-#         """Returns the number of incoming edges to the vertex
-#         
-#         Returns
-#         -------
-#         int
-#             The number of incoming edges.
-#         """
-#         return 5
-        
-
-# class Edge():
-#     """A Generic Edge.
-#     
-#     Parameters
-#     ----------
-#     src_node : Object
-#         The node at the source of the edge.
-#     dst_node : Object
-#         The node at the target of the edge.
-#     properties : Object
-#         A python object attached to the edge.
-#     """
-#     def __init__(self,src_node,dst_node,properties):
-#         self._src_node = src_node
-#         self._dst_node = dst_node
-#         self._properties = properties
-#     
-#     @staticmethod
-#     def from_df(edges):
-#         converted = edges.apply(lambda x: Edge(x[0],x[1],x[2]), axis = 1)
-#         for e in converted:
-#             yield e
-#         
-#     @property
-#     def properties(self):
-#         """Returns the properties attached to the edge.
-#         
-#         Returns
-#         -------
-#         Object
-#             Returns the properties attached to the edge.
-#         """
-#         return self._properties
-#     
-#     @property
-#     def src(self):
-#         """Returns the node at the source of the edge.
-#         
-#         Returns
-#         -------
-#         Object
-#             Returns the node which sits at the source of the edge.
-#         """
-#         return self._src_node
-#     
-#     @property
-#     def dst(self):
-#         """Returns the node at the destination of the edge.
-#         
-#         Returns
-#         -------
-#         Object
-#             Returns the node which sits at the destination of the edge.
-#         """
-#         return self._dst_node
-#         
-#     def __repr__(self):
-#         return 'src: ' + repr(self.src) + ' edge: ' + repr(self.properties) + ' dst: ' + repr(self.dst)
         
