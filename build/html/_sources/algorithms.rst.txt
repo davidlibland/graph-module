@@ -1,0 +1,61 @@
+
+.. rubric:: Algorithms
+
+.. autosummary:: 
+	graph.algorithms.page_rank
+	graph.algorithms.out_degree
+	graph.algorithms.connected_comp
+
+.. rubric:: Convenience Classes	
+	
+.. autosummary:: 
+	graph.algorithms.GraphLabel
+	
+Graph Algorithms
+================
+
+Note
+----
+For each of the following algorithms, the node and edge objects must be able to store 
+attributes in dict-like fashion. If necessary you can wrap the existing node and edge 
+objects with :class:`graph.algorithms.GraphLabel` use the method 
+
+.. code-block:: python
+
+	g.new_projection(GraphLabel.edge_wrapper,GraphLabel.node_wrapper)
+
+and then apply
+the algorithm to the returned graph. See :class:`graph.algorithms.GraphLabel` for more details.
+   
+Out Degree
+----------   
+.. autofunction:: graph.algorithms.out_degree
+
+.. literalinclude:: ../../graph/algorithms/out_degree.py
+   :language: python
+   :linenos:
+   :lines: 1,11-17
+
+PageRank
+--------
+.. autofunction:: graph.algorithms.page_rank
+	
+.. literalinclude:: ../../graph/algorithms/page_rank.py
+   :language: python
+   :linenos:
+   :lines: 3,26-72
+   
+Connected Components
+--------------------
+.. autofunction:: graph.algorithms.connected_comp
+
+.. literalinclude:: ../../graph/algorithms/connected_comp.py
+   :language: python
+   :linenos:
+   :lines: 1,15-32
+
+Convenience Classes for Algorithms
+==================================
+
+.. automodule:: graph.algorithms
+	:members: GraphLabel
