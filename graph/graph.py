@@ -375,11 +375,11 @@ class Graph():
         """ 
         patterns = [p.strip() for p in motif.split(';')]
         def parse_pattern(p):
-            a = re.search('\(.*\)-',p)
+            a = re.search('\(.+\)-',p)
             src = '' if not a else a.group(0)[:-1].strip()
-            e = re.search('-\[.*\]->',p)
+            e = re.search('-\[.+\]->',p)
             e = '' if not e else e.group(0)[1:-2].strip()
-            b = re.search('->\(.*\)',p)
+            b = re.search('->\(.+\)',p)
             dst = '' if not b else b.group(0)[2:].strip()
             return src,dst,e
         
@@ -402,7 +402,27 @@ class Graph():
         return df_out
         
     def __repr__(self):
-        return repr(self._nodes)+'\n'+repr(self._edges)
+        cur_repr = 'Nodes:'
+        i = 1
+        for node in self.nodes():
+            i_repr = "{:5d}".format(i)
+            cur_repr += '\n'+i_repr+' '+repr(node)
+            i += 1
+        cur_repr += '\n\nEdges:\n'+'     Source Node'+' '*14+'Edge Object'+' '*14+'Destination Node'
+        i = 1
+        for edge in self._edges.itertuples():
+            def truncate(txt,n):
+                if len(txt)>n:
+                    return txt[:n-4]+' ... '
+                else:
+                    return txt
+            src_txt = truncate("{:<24}".format(repr(edge.src_node)),24)
+            dst_txt = truncate("{:<24}".format(repr(edge.dst_node)),24)
+            edge_txt = truncate("{:<24}".format(repr(edge.edge_obj)),24)
+            i_repr = "{:5d}".format(i)
+            cur_repr += '\n'+i_repr+src_txt+' '+edge_txt+' '+dst_txt
+            i+=1
+        return cur_repr
     
     def write_dot(self,filename,edge_repr=None,node_repr=None):
         with open(filename,'w') as file:

@@ -1,0 +1,11 @@
+digraph {
+	rankdir=LR;
+	ratio=auto;
+	center=true;
+	A -> B [label="1.0"];
+	A -> C [label="2.0"];
+	B -> C [label="2.0"];
+	C -> D [label="1.0"];
+	D -> A [label="3.0"];
+	E;
+}

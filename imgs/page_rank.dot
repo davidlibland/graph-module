@@ -1,0 +1,15 @@
+digraph {
+	rankdir=LR;
+	ratio=auto;
+	center=true;
+	A[label="A 1.333"];
+	B[label="B 0.747"];
+	C[label="C 1.382"];
+	D[label="D 1.356"];
+	E[label="E 0.180"];
+	A -> B;
+	A -> C;
+	B -> C;
+	C -> D;
+	D -> A;
+}
